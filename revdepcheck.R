@@ -3,6 +3,8 @@ options(future.rng.onMisuse = "ignore")
 library(furrr)
 plan(multisession)
 
+arrow_r_home <- fs::path_abs("../arrow/r")
+
 # Note: RcisTarget is bioconductor
 
 # Query reverse depencencies ----------
@@ -44,23 +46,14 @@ if (Sys.info()["sysname"] == "Darwin") {
   deps_ref <- setdiff(deps_ref, "Rmpi")
 }
 
-pak::pkg_install(deps_ref, lib = "deps", upgrade = TRUE)
-Sys.setenv("R_LIBS_USER" = file.path(getwd(), "deps"))
+pak::pkg_install(deps_ref, upgrade = TRUE)
+
+# Install CRAN arrow
+pak::pkg_install("arrow")
 
 # Run rcmdcheck
 unlink("check_with_cran", recursive = TRUE)
 dir.create("check_with_cran")
-
-# first, build the packages
-future_walk(
-  rev_deps,
-  ~withr::with_dir("check_with_cran", {
-    cmd <- glue::glue('R_LIBS_USER={file.path(getwd(), "deps")} R CMD build {file.path("..", "rev_deps", .x)} --no-build-vignettes')
-    cat(paste0(cmd, "\n"))
-    system(cmd, ignore.stderr = TRUE, ignore.stdout = TRUE)
-  }),
-  .progress = TRUE
-)
 
 results <- future_map(rev_deps, ~{
   pkg <- file.path("rev_deps", .x)
@@ -68,8 +61,6 @@ results <- future_map(rev_deps, ~{
     rcmdcheck::rcmdcheck(
       pkg,
       check_dir = file.path(getwd(), "check_with_cran", .x),
-      libpath = file.path(getwd(), "deps"),
-      env = c("R_LIBS_USER", file.path(getwd(), "deps")),
       quiet = TRUE
     )
   )
@@ -81,11 +72,41 @@ if (any(failed)) {
   message(
     paste0(
       glue::glue(
-        "- rcmdcheck::rcmdcheck(\"rev_deps/{rev_deps[failed]}\", libpath = file.path(getwd(), \"deps\"))",
+        "- rcmdcheck::rcmdcheck(\"rev_deps/{rev_deps[failed]}\")",
       ),
       collapse = "\n"
     )
   )
 }
 
+# Install local arrow
+pak::pkg_install(paste0("local::", arrow_r_home))
 
+# Run the checks again
+results2 <- future_map(rev_deps, ~{
+  pkg <- file.path("rev_deps", .x)
+  try(
+    rcmdcheck::rcmdcheck(
+      pkg,
+      check_dir = file.path(getwd(), "check_with_local", .x),
+      quiet = TRUE
+    )
+  )
+}, .progress = TRUE)
+
+failed2 <- vapply(results2, inherits, logical(1), "try-error")
+if (any(failed2)) {
+  message(glue::glue("{sum(failed)} packages failed to check:"))
+  message(
+    paste0(
+      glue::glue(
+        "- rcmdcheck::rcmdcheck(\"rev_deps/{rev_deps[failed]}\")",
+      ),
+      collapse = "\n"
+    )
+  )
+}
+
+saveRDS(rev_deps, "rev_deps.rds")
+saveRDS(results, "results_with_cran.rds")
+saveRDS(results2, "results_with_local.rds")
