@@ -82,6 +82,9 @@ if (any(failed)) {
 # Install local arrow
 pak::pkg_install(paste0("local::", arrow_r_home))
 
+unlink("check_with_local", recursive = TRUE)
+dir.create("check_with_local")
+
 # Run the checks again
 results2 <- future_map(rev_deps, ~{
   pkg <- file.path("rev_deps", .x)
@@ -96,11 +99,11 @@ results2 <- future_map(rev_deps, ~{
 
 failed2 <- vapply(results2, inherits, logical(1), "try-error")
 if (any(failed2)) {
-  message(glue::glue("{sum(failed)} packages failed to check:"))
+  message(glue::glue("{sum(failed2)} packages failed to check:"))
   message(
     paste0(
       glue::glue(
-        "- rcmdcheck::rcmdcheck(\"rev_deps/{rev_deps[failed]}\")",
+        "- rcmdcheck::rcmdcheck(\"rev_deps/{rev_deps[failed2]}\")",
       ),
       collapse = "\n"
     )
