@@ -9,16 +9,11 @@ arrow_r_home <- fs::path_abs("../arrow/r")
 
 # Query reverse depencencies ----------
 
-rev_imports <- c("CDMConnector", "ClickHouseHTTP", "dataversionr", "diffdfs",
-                 "disk.frame", "gbifdb", "MolgenisArmadillo", "parqr",
-                 "receptiviti", "sfarrow", "starvz", "strand", "tradestatistics"
-)
-
-rev_suggests <- c("analogsea", "arkdb", "duckdb", "mrgsim.parallel", "nflreadr",
-                  "noctua", "opencpu", "pins", "plumber", "pointblank", "RAthena",
-                  "raveio", "rio", "sparklyr", "targets")
-
+pkgs <- available.packages()
+rev_imports <- unname(pkgs[grepl("\\barrow\\b", pkgs[, "Imports"]) , "Package"])
+rev_suggests <- unname(pkgs[grepl("\\barrow\\b", pkgs[, "Suggests"]) , "Package"])
 rev_deps <- sort(c(rev_imports, rev_suggests))
+saveRDS(rev_deps, "rev_deps.rds")
 
 unlink("rev_deps", recursive = TRUE)
 dir.create("rev_deps")
@@ -38,7 +33,9 @@ future_walk(
 rev_deps_pak <- paste0("local::rev_deps/", rev_deps)
 deps <- pak::pkg_deps(rev_deps_pak, upgrade = TRUE, dependencies = TRUE)
 
-# install dependencies to a dedicated library
+# Note: installing dependencies to a dedicated library doesn't quite work
+# everywhere, so this will install everything to your local R install.
+# If you don't want that, you currently have to use a docker image.
 deps_ref <- deps$ref
 
 # Rmpi not available on MacOS
@@ -46,10 +43,12 @@ if (Sys.info()["sysname"] == "Darwin") {
   deps_ref <- setdiff(deps_ref, "Rmpi")
 }
 
+# CRAN will use the latest versions, so we need to here too
 pak::pkg_install(deps_ref, upgrade = TRUE)
 
-# Install CRAN arrow
+# Install CRAN arrow and make sure we're using *CRAN* arrow
 pak::pkg_install("arrow")
+stopifnot(packageVersion("arrow") == "10.0.0")
 
 # Run rcmdcheck
 unlink("check_with_cran", recursive = TRUE)
@@ -79,8 +78,17 @@ if (any(failed)) {
   )
 }
 
+# Save the results!
+saveRDS(results, "results_with_cran.rds")
+
 # Install local arrow
+# withr::with_dir(arrow_r_home, usethis::pr_fetch(14772))
+# ...rebuild libarrow. For me I have a script called "../arrow-build.sh"
+# that does this locally and much faster than a source install.
+# Alternatively, you could do make sync-cpp and R CMD INSTALL .
+# from the R directory
 pak::pkg_install(paste0("local::", arrow_r_home))
+stopifnot(packageVersion("arrow") == "10.0.1")
 
 unlink("check_with_local", recursive = TRUE)
 dir.create("check_with_local")
@@ -110,6 +118,4 @@ if (any(failed2)) {
   )
 }
 
-saveRDS(rev_deps, "rev_deps.rds")
-saveRDS(results, "results_with_cran.rds")
 saveRDS(results2, "results_with_local.rds")
