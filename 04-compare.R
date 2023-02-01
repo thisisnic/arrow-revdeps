@@ -1,4 +1,5 @@
 
+testthat::local_reproducible_output()
 library(tidyverse)
 library(rcmdcheck)
 
@@ -39,5 +40,34 @@ for (i in which(has_difference)) {
 
   print(results_with_local[[i]])
 
+  cat("\n\n```\n\n")
+}
+
+cat("# Check Summary\n\n")
+
+cat("## CRAN\n\n")
+
+print(df_with_cran, n = Inf)
+
+cat("## Local\n\n")
+
+print(df_with_local, n = Inf)
+
+cat("# All notes and errors")
+
+df_with_stuff <- df_with_local |>
+  mutate(
+    i = seq_len(n()),
+    n_notes = map_int(notes, length),
+    n_warnings = map_int(warnings, length),
+    n_errors = map_int(errors, length)
+  ) |>
+  filter(n_notes > 0 | n_warnings > 0 | n_errors > 0) |>
+  arrange(desc(n_errors), desc(n_warnings), desc(n_notes))
+
+
+for (i in df_with_stuff$i) {
+  cat(glue::glue("## {rev_deps[i]}\n\n```\n\n"))
+  print(results_with_cran[[i]])
   cat("\n\n```\n\n")
 }

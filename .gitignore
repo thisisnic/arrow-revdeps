@@ -7,3 +7,4 @@ rev_deps
 deps
 check_with_cran
 check_with_local
+*.rds
