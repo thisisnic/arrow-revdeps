@@ -3,17 +3,11 @@ options(future.rng.onMisuse = "ignore")
 library(furrr)
 plan(multisession)
 
-arrow_r_home <- fs::path_abs("../arrow/r")
 rev_deps <- readRDS("rev_deps.rds")
 
 # Install local arrow
-# withr::with_dir(arrow_r_home, usethis::pr_fetch(14772))
-# ...rebuild libarrow. For me I have a script called "../arrow-build.sh"
-# that does this locally and much faster than a source install.
-# Alternatively, you could do make sync-cpp and R CMD INSTALL .
-# from the R directory
-pak::pkg_install(paste0("local::", arrow_r_home))
-stopifnot(packageVersion("arrow") == "11.0.0")
+pak::pkg_install(Sys.getenv("ARROW_R_REVDEP_NEW_REF", "ARROW_R_REVDEP_NEW_REF_NOT_SET"))
+stopifnot(packageVersion("arrow") == Sys.getenv("ARROW_R_REVDEP_VERSION_NEW", "NOT_SET"))
 
 unlink("check_with_local", recursive = TRUE)
 dir.create("check_with_local")

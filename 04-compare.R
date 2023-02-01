@@ -45,15 +45,15 @@ for (i in which(has_difference)) {
 
 cat("# Check Summary\n\n")
 
-cat("## CRAN\n\n")
+cat("## CRAN\n\n```\n")
 
 print(df_with_cran, n = Inf)
 
-cat("## Local\n\n")
+cat("```\n\n## Local\n\n```\n")
 
 print(df_with_local, n = Inf)
 
-cat("# All notes and errors")
+cat("```\n\n# All notes and errors\n\n")
 
 df_with_stuff <- df_with_local |>
   mutate(

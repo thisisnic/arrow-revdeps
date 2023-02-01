@@ -7,7 +7,7 @@ rev_deps <- readRDS("rev_deps.rds")
 
 # Install CRAN arrow and make sure we're using *CRAN* arrow
 pak::pkg_install("arrow")
-stopifnot(packageVersion("arrow") == "10.0.1")
+stopifnot(packageVersion("arrow") == Sys.getenv("ARROW_R_REVDEP_VERSION_OLD", "NOT_SET"))
 
 # Run rcmdcheck
 unlink("check_with_cran", recursive = TRUE)

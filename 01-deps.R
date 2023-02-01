@@ -2,8 +2,6 @@ options(future.rng.onMisuse = "ignore")
 library(furrr)
 plan(multisession)
 
-arrow_r_home <- fs::path_abs("../arrow/r")
-
 # Note: RcisTarget is bioconductor
 
 # Query reverse depencencies ----------
@@ -28,21 +26,43 @@ future_walk(
 
 # Install dependencies needed for checking ----------
 
-# collect dependencies and install them
-# this also has the effect of making sure all of the reverse dependencies
-# we're about to attempt checking will actually install
-rev_deps_pak <- paste0("local::rev_deps/", rev_deps)
-deps <- pak::pkg_deps(rev_deps_pak, upgrade = TRUE, dependencies = TRUE)
+# pak doesn't quite get the dependencies right and R CMD check is by default
+# picky about having all Suggested/Enhances dependencies available.
+pkgs_deps <- pkgs[
+  pkgs[, "Package"] %in% rev_deps,
+  c("Package", "Depends", "Imports", "LinkingTo", "Suggests", "Enhances")
+]
 
-# Note: installing dependencies to a dedicated library doesn't quite work
-# everywhere, so this will install everything to your local R install.
-# If you don't want that, you currently have to use a docker image.
-deps_ref <- deps$ref
+pkgs_deps <- gsub("\\(.*?\\)", "", as.character(pkgs_deps)) |>
+  strsplit("\\s*,\\s*") |>
+  unlist() |>
+  trimws() |>
+  unique() |>
+  # Built-in packages aren't in available.packages()
+  setdiff(c("R", "stats", "tools", "utils", "methods", "datasets", "grDevices", "parallel")) |>
+  sort()
 
 # Rmpi not available on MacOS
 if (Sys.info()["sysname"] == "Darwin") {
-  deps_ref <- setdiff(deps_ref, "Rmpi")
+  pkgs_deps <- setdiff(pkgs_deps, "Rmpi")
 }
 
+unavailable_packages <- setdiff(pkgs_deps, pkgs[, "Package"])
+if (length(unavailable_packages) > 0) {
+  message(glue::glue("{length(unavailable_packages)} dependency package not installable via pak::pkg_install():"))
+  for (pkg in unavailable_packages) {
+    message(glue::glue("- {pkg}"))
+  }
+
+  message("You may need to install via GitHub")
+}
+
+pkgs_deps <- setdiff(pkgs_deps, unavailable_packages)
+
 # CRAN will use the latest versions, so we need to here too
-pak::pkg_install(deps_ref, upgrade = TRUE)
+pak::pkg_install(pkgs_deps, upgrade = TRUE)
+
+# Install the local versions of the checked-out sources. This is useful
+# for ensuring that all our dependencies are actually going to build.
+rev_deps_pak <- paste0("local::rev_deps/", rev_deps)
+pak::pkg_install(rev_deps_pak, upgrade = TRUE)
