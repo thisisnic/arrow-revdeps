@@ -7,8 +7,8 @@ unlink(c("results_with_cran.rds", "results_with_local.rds", "rev_deps.rds"))
 # reference is used for pak::pkg_install() to install the new version
 # (can be local::path/to/arrow/r or pre-packaged tarball)
 
-version_old <- "11.0.0.3"
-version_new <- "12.0.0"
+version_old <- "12.0.0"
+version_new <- "12.0.1"
 Sys.setenv("ARROW_R_REVDEP_VERSION_OLD" = version_old)
 Sys.setenv("ARROW_R_REVDEP_VERSION_NEW" = version_new)
 Sys.setenv("ARROW_R_REVDEP_NEW_REF" = "local::/Users/dewey/Desktop/rscratch/arrow/r")
