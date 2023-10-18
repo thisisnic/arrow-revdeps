@@ -1,5 +1,70 @@
 # Changes
 
+## pins
+
+### With CRAN arrow
+
+```
+-- R CMD check results ----------------------------------------- pins 1.2.2 ----
+Duration: 2m 59.4s
+
+0 errors v | 0 warnings v | 0 notes v
+
+```
+
+### With local arrow
+
+```
+-- R CMD check results ----------------------------------------- pins 1.2.2 ----
+Duration: 2m 48.7s
+
+> checking for new files in some other directories ... NOTE
+  Found the following files/directories:
+    ‘~/Library/Caches/org.R-project.R/R/censobr/data_release_v0.2.0/2010_population_v0.2.0.parquet’
+    ‘~/Library/Caches/org.R-project.R/R/censobr/data_release_v0.2.0/2010_tracts_Basico_v0.2.0.parquet’
+    ‘~/Library/Caches/org.R-project.R/R/censobr/data_release_v0.2.0/2010_tracts_DomicilioRenda_v0.2.0.parquet’
+    ‘~/Library/Caches/org.R-project.R/R/censobr/data_release_v0.2.0/2010_tracts_Entorno_v0.2.0.parquet’
+
+0 errors v | 0 warnings v | 1 note x
+
+
+```
+
+## sparklyr
+
+### With CRAN arrow
+
+```
+-- R CMD check results ------------------------------------- sparklyr 1.8.3 ----
+Duration: 1m 39.5s
+
+> checking installed package size ... NOTE
+    installed size is  7.2Mb
+    sub-directories of 1Mb or more:
+      R      2.1Mb
+      java   3.8Mb
+
+0 errors v | 0 warnings v | 1 note x
+
+```
+
+### With local arrow
+
+```
+-- R CMD check results ------------------------------------- sparklyr 1.8.3 ----
+Duration: 1m 54.1s
+
+> checking installed package size ... NOTE
+    installed size is  7.2Mb
+    sub-directories of 1Mb or more:
+      R      2.0Mb
+      java   3.8Mb
+
+0 errors v | 0 warnings v | 1 note x
+
+
+```
+
 # Check Summary
 
 ## CRAN
@@ -13,7 +78,7 @@
  3 CRAN  APCalign          <chr [1]> <chr [0]> <chr [0]>
  4 CRAN  arkdb             <chr [0]> <chr [0]> <chr [1]>
  5 CRAN  brclimr           <chr [0]> <chr [0]> <chr [0]>
- 6 CRAN  CDMConnector      <chr [1]> <chr [0]> <chr [0]>
+ 6 CRAN  CDMConnector      <chr [0]> <chr [0]> <chr [0]>
  7 CRAN  censobr           <chr [0]> <chr [0]> <chr [0]>
  8 CRAN  ClickHouseHTTP    <chr [0]> <chr [0]> <chr [0]>
  9 CRAN  CodelistGenerator <chr [0]> <chr [0]> <chr [0]>
@@ -36,11 +101,11 @@
 26 CRAN  nflreadr          <chr [0]> <chr [0]> <chr [0]>
 27 CRAN  nhdplusTools      <chr [0]> <chr [0]> <chr [0]>
 28 CRAN  noctua            <chr [0]> <chr [0]> <chr [0]>
-29 CRAN  OlinkAnalyze      <chr [0]> <chr [0]> <chr [1]>
+29 CRAN  OlinkAnalyze      <chr [1]> <chr [0]> <chr [0]>
 30 CRAN  opencpu           <NULL>    <NULL>    <NULL>   
 31 CRAN  parqr             <chr [0]> <chr [0]> <chr [0]>
 32 CRAN  parquetize        <chr [0]> <chr [0]> <chr [0]>
-33 CRAN  pins              <chr [0]> <chr [0]> <chr [1]>
+33 CRAN  pins              <chr [0]> <chr [0]> <chr [0]>
 34 CRAN  plumber           <chr [0]> <chr [0]> <chr [0]>
 35 CRAN  pointblank        <chr [1]> <chr [0]> <chr [0]>
 36 CRAN  r4ds.tutorials    <chr [0]> <chr [0]> <chr [0]>
@@ -70,7 +135,7 @@
  3 local APCalign          <chr [1]> <chr [0]> <chr [0]>
  4 local arkdb             <chr [0]> <chr [0]> <chr [1]>
  5 local brclimr           <chr [0]> <chr [0]> <chr [0]>
- 6 local CDMConnector      <chr [1]> <chr [0]> <chr [0]>
+ 6 local CDMConnector      <chr [0]> <chr [0]> <chr [0]>
  7 local censobr           <chr [0]> <chr [0]> <chr [0]>
  8 local ClickHouseHTTP    <chr [0]> <chr [0]> <chr [0]>
  9 local CodelistGenerator <chr [0]> <chr [0]> <chr [0]>
@@ -93,11 +158,11 @@
 26 local nflreadr          <chr [0]> <chr [0]> <chr [0]>
 27 local nhdplusTools      <chr [0]> <chr [0]> <chr [0]>
 28 local noctua            <chr [0]> <chr [0]> <chr [0]>
-29 local OlinkAnalyze      <chr [0]> <chr [0]> <chr [1]>
+29 local OlinkAnalyze      <chr [1]> <chr [0]> <chr [0]>
 30 local opencpu           <NULL>    <NULL>    <NULL>   
 31 local parqr             <chr [0]> <chr [0]> <chr [0]>
 32 local parquetize        <chr [0]> <chr [0]> <chr [0]>
-33 local pins              <chr [0]> <chr [0]> <chr [1]>
+33 local pins              <chr [1]> <chr [0]> <chr [0]>
 34 local plumber           <chr [0]> <chr [0]> <chr [0]>
 35 local pointblank        <chr [1]> <chr [0]> <chr [0]>
 36 local r4ds.tutorials    <chr [0]> <chr [0]> <chr [0]>
@@ -122,7 +187,7 @@
 
 ```
 -- R CMD check results ------------------------------------ Andromeda 0.6.3 ----
-Duration: 1m 19.8s
+Duration: 59.6s
 
 > checking tests ...
   See below...
@@ -175,7 +240,7 @@ Execution halted
 
 ```
 -- R CMD check results --------------------------------------- arkdb 0.0.16 ----
-Duration: 1m 35.2s
+Duration: 1m 42.7s
 
 > checking tests ...
   See below...
@@ -247,53 +312,11 @@ Database is garbage-collected, use dbDisconnect(con, shutdown=TRUE) or duckdb::d
 
 ```
 
-## OlinkAnalyze
-
-```
--- R CMD check results --------------------------------- OlinkAnalyze 3.5.1 ----
-Duration: 2.7s
-
-> checking package dependencies ... ERROR
-  Package suggested but not available: ‘clusterProfiler’
-  
-  The suggested packages are required for a complete check.
-  Checking can be attempted without them by setting the environment
-  variable _R_CHECK_FORCE_SUGGESTS_ to a false value.
-  
-  See section ‘The DESCRIPTION file’ in the ‘Writing R Extensions’
-  manual.
-
-1 error x | 0 warnings v | 0 notes v
-
-
-```
-
-## pins
-
-```
--- R CMD check results ----------------------------------------- pins 1.2.2 ----
-Duration: 6.1s
-
-> checking package dependencies ... ERROR
-  Package suggested but not available: ‘archive’
-  
-  The suggested packages are required for a complete check.
-  Checking can be attempted without them by setting the environment
-  variable _R_CHECK_FORCE_SUGGESTS_ to a false value.
-  
-  See section ‘The DESCRIPTION file’ in the ‘Writing R Extensions’
-  manual.
-
-1 error x | 0 warnings v | 0 notes v
-
-
-```
-
 ## receptiviti
 
 ```
 -- R CMD check results ---------------------------------- receptiviti 0.1.5 ----
-Duration: 1m 23.2s
+Duration: 1m 14.2s
 
 > checking tests ...
   See below...
@@ -335,25 +358,10 @@ Execution halted
 
 ```
 -- R CMD check results ------------------------------------- APCalign 0.1.2 ----
-Duration: 7m 34.9s
+Duration: 7m 53.5s
 
 > checking data for non-ASCII characters ... NOTE
     Note: found 4 marked UTF-8 strings
-
-0 errors v | 0 warnings v | 1 note x
-
-
-```
-
-## CDMConnector
-
-```
--- R CMD check results --------------------------------- CDMConnector 1.1.3 ----
-Duration: 1m 6.2s
-
-> checking package dependencies ... NOTE
-  Packages which this enhances but not available for checking:
-    'CirceR', 'Capr'
 
 0 errors v | 0 warnings v | 1 note x
 
@@ -364,7 +372,7 @@ Duration: 1m 6.2s
 
 ```
 -- R CMD check results --------------------------------------- duckdb 0.9.1 ----
-Duration: 6m 25.8s
+Duration: 5m 57.5s
 
 > checking installed package size ... NOTE
     installed size is 31.2Mb
@@ -380,7 +388,7 @@ Duration: 6m 25.8s
 
 ```
 -- R CMD check results ------------------------------------ epiCleanr 0.2.0 ----
-Duration: 32.3s
+Duration: 44.4s
 
 > checking installed package size ... NOTE
     installed size is  5.6Mb
@@ -393,11 +401,36 @@ Duration: 32.3s
 
 ```
 
+## OlinkAnalyze
+
+```
+-- R CMD check results --------------------------------- OlinkAnalyze 3.5.1 ----
+Duration: 4m 3.8s
+
+> checking package dependencies ... NOTE
+  Package suggested but not available for checking: ‘clusterProfiler’
+
+0 errors v | 0 warnings v | 1 note x
+
+
+```
+
+## pins
+
+```
+-- R CMD check results ----------------------------------------- pins 1.2.2 ----
+Duration: 2m 59.4s
+
+0 errors v | 0 warnings v | 0 notes v
+
+
+```
+
 ## pointblank
 
 ```
 -- R CMD check results ---------------------------------- pointblank 0.11.4 ----
-Duration: 2m 14s
+Duration: 1m 33.2s
 
 > checking data for non-ASCII characters ... NOTE
     Note: found 1 marked UTF-8 string
@@ -411,7 +444,7 @@ Duration: 2m 14s
 
 ```
 -- R CMD check results ------------------------------------- sparklyr 1.8.3 ----
-Duration: 1m 55.3s
+Duration: 1m 39.5s
 
 > checking installed package size ... NOTE
     installed size is  7.2Mb
@@ -428,7 +461,7 @@ Duration: 1m 55.3s
 
 ```
 -- R CMD check results --------------------------------------- strand 0.2.0 ----
-Duration: 3m 44.8s
+Duration: 3m 7.9s
 
 > checking data for non-ASCII characters ... NOTE
     Note: found 1 marked UTF-8 string
@@ -442,7 +475,7 @@ Duration: 3m 44.8s
 
 ```
 -- R CMD check results -------------------------------------- tiledb 0.21.1 ----
-Duration: 1m 30.2s
+Duration: 1m 32.6s
 
 > checking installed package size ... NOTE
     installed size is 34.2Mb
