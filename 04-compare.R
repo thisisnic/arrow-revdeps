@@ -43,6 +43,10 @@ for (i in which(has_difference)) {
   cat("\n\n```\n\n")
 }
 
+if (!any(has_difference)) {
+  cat("There were no changes!\n")
+}
+
 cat("# Check Summary\n\n")
 
 cat("## CRAN\n\n```\n")

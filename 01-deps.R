@@ -39,7 +39,10 @@ pkgs_deps <- gsub("\\(.*?\\)", "", as.character(pkgs_deps)) |>
   trimws() |>
   unique() |>
   # Built-in packages aren't in available.packages()
-  setdiff(c("R", "stats", "tools", "utils", "methods", "datasets", "grDevices", "parallel")) |>
+  setdiff(
+    c("R", "stats", "tools", "utils", "methods",
+      "datasets", "grDevices", "parallel", "MASS", "grid")
+  ) |>
   sort()
 
 # Rmpi not available on MacOS
